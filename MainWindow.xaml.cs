@@ -143,6 +143,7 @@ namespace Piłkarze
                         break;
                     }
                 }
+                Clear(); 
 
             }
         }
