@@ -3,19 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:Piłkarze"
         mc:Ignorable="d"
-        Title="Piłkarze" Height="450" Width="800" Loaded="WindowLoaded" Closing="WindowClosing">
-    <Grid Background="Lavender">
+        xmlns:vm1="clr-namespace:Piłkarze.ViewModel"
+        Title="Piłkarze" Height="450" Width="800" ResizeMode="NoResize">
+    <Window.Resources>
+        <vm1:ViewModel x:Key="viewModel"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource  viewModel}" Background="Lavender">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
             <Label Content="FirstName" />
-            <local:TextBox x:Name="TextBoxFirstName" Margin="10" FontSize="20" Background="#cc99ff"/>
+            <TextBox x:Name="TextBoxFirstName" Margin="10" FontSize="20" Background="#cc99ff" Text="{Binding Path=firstname, 
+                               Mode=TwoWay 
+                             }"
+                           />
             <Label Content="Surname "/>
-            <local:TextBox x:Name="TextBoxSurname" Margin="10" FontSize="20" Background="#cc99ff"/>
+            <TextBox x:Name="TextBoxSurname" Margin="10" FontSize="20" Background="#cc99ff"
+                            Text="{Binding Path=surname, 
+                               Mode=TwoWay 
+                             }"
+                           />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -24,7 +36,7 @@
                 <Label Grid.Column="0" Content="Age:"/>
                 <Label Grid.Column="1" Margin="5" HorizontalAlignment="Right" Content="{Binding Path=Value,ElementName=sliderAge}" />
      </Grid>
-            <Slider x:Name="sliderAge" Margin="10" Value="25" Minimum="15" Maximum="50" TickFrequency="1" IsSnapToTickEnabled="True" Background="#cc99ff"/>
+            <Slider x:Name="sliderAge" Value="{Binding Path=age, Mode=TwoWay }" Margin="10" Minimum="15" Maximum="50" TickFrequency="1" IsSnapToTickEnabled="True" Background="#cc99ff"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -33,19 +45,30 @@
                 <Label Grid.Column="0" Content="Weight:"/>
                 <Label Grid.Column="1" Margin="5" HorizontalAlignment="Right" Content="{Binding Path=Value,ElementName=sliderWeight}" />
             </Grid>
-            <Slider x:Name="sliderWeight" Margin="10" Value="75" Minimum="50" Maximum="110" TickFrequency="1" IsSnapToTickEnabled="True" Background="#cc99ff" />
+            <Slider x:Name="sliderWeight" Value="{Binding Path=weight, Mode=TwoWay }" Margin="10" Minimum="50" Maximum="110" TickFrequency="1" IsSnapToTickEnabled="True" Background="#cc99ff"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonAdd" Grid.Column="0" Content="Add" Margin="10,40" Height="40" Click="buttonAddClick" Background="#cc99ff"/>
-                <Button x:Name="buttonEdit" Grid.Column="1" Content="Edit" Margin="10,40" Height="40" Click="buttonEditClick" IsEnabled="False" Background="#cc99ff"/>
-                <Button x:Name="buttonDelete" Grid.Column="2" Content="Delete" Margin="10,40" Height="40" Click="buttonDeleteClick" IsEnabled="False" Background="#cc99ff"/>
+                <Button x:Name="buttonAdd" Grid.Column="0" Content="Add" Margin="10,40" Height="40" Background="#cc99ff" Command="{Binding addCommand}"/>
+                <Button x:Name="buttonEdit" Grid.Column="1" Content="Edit" Margin="10,40" Height="40" Background="#cc99ff" Command="{Binding editCommand}"/>
+                <Button x:Name="buttonDelete" Grid.Column="2" Content="Delete" Margin="10,40" Height="40" Background="#cc99ff" Command="{Binding deleteCommand}"/>
             </Grid>
         </StackPanel>
-        <ListBox x:Name="listBoxFootballer" Grid.Row="0" Grid.Column="1" Margin="10" FontSize="25"  SelectionChanged="listBoxfootballereSelectionChanged" Background="Lavender" Foreground="#CC99FF"   />
+        <ListBox x:Name="listBoxFootballer" ItemsSource="{Binding Footballers, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=selectedFootballer}"  Grid.Row="0" Grid.Column="1" Margin="10" FontSize="25" Background="Lavender" Foreground="#CC99FF">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Path=.}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding Select}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ListBox>
 
     </Grid>
 </Window>

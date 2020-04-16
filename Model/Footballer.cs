@@ -6,15 +6,18 @@ using System.Threading.Tasks;
 
 namespace Piłkarze
 {
-    class Footballer
+    public class Footballer
     {
+
+        public int Id { get; set; }
         public string Surname { get; set; }
         public string FirstName { get; set; }
         public uint Age { get; set; }
         public uint Weight { get; set; }
 
-        public Footballer(string firstName, string surname, uint age, uint weight)
+        public Footballer(int id, string firstName, string surname, uint age, uint weight)
         {
+            Id = id;
             FirstName = firstName;
             Surname = surname;
             Age = age;
