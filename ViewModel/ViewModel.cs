@@ -16,6 +16,19 @@ namespace Piłkarze.ViewModel
 
         private ObservableCollection<Footballer> footballers = new ObservableCollection<Footballer>();
 
+        private bool isValidString(string arg)
+        { if (arg != "")
+            {
+                foreach (var item in arg)
+                {
+                    if (item >= 'A' && item <= 'Z') { continue; }
+                    else if (item >= 'a' && item <= 'z') { continue; }
+                    else { return false; }
+                }
+                return true;
+            }
+            else return false;
+        }
         public ObservableCollection<Footballer> Footballers {
             get { return footballers; }
 
@@ -46,6 +59,10 @@ namespace Piłkarze.ViewModel
             surname = null;
             age = 0;
             weight = 0;
+            onPropertyChanged(nameof(firstname));
+            onPropertyChanged(nameof(surname));
+            onPropertyChanged(nameof(age));
+            onPropertyChanged(nameof(weight));
         }
 
         private ICommand _addCommand = null;
@@ -69,7 +86,7 @@ namespace Piłkarze.ViewModel
                         onPropertyChanged(nameof(weight));
                         //onPropertyChanged(nameof(footballers));
                     },
-                                                    arg => firstname != null && surname != null);
+                                                    arg => firstname != null && surname != null && isValidString(firstname) && isValidString(surname));
                 }
                 return _addCommand;
             }
@@ -89,7 +106,7 @@ namespace Piłkarze.ViewModel
                         clearForm();
                         selectedFootballer = null;
                         },
-                                                    arg => selectedFootballer != null);
+                                                    arg => selectedFootballer != null && isValidString(firstname) && isValidString(surname));
                 }
                 return _editCommand;
             }
@@ -109,7 +126,8 @@ namespace Piłkarze.ViewModel
                         onPropertyChanged(nameof(footballers));
                         clearForm();
                         selectedFootballer=null;
-                        },
+                        onPropertyChanged(nameof(selectedFootballer));
+                    },
                                                     arg => selectedFootballer != null);
                 }
                 return _deleteCommand;
